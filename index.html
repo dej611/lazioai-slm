@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet" crossorigin="anonymous"/>
+  <title>LLM locale nel browser: limiti e applicazioni · LazioAI</title>
+</head>
+<body>
+<header class="kitt-chrome">
+  <div class="kitt-brand">KNIGHT INDUSTRIES TWO THOUSAND</div>
+  <div class="kitt-scanner" id="kitt-scanner"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+  <div class="kitt-hud">
+    <span id="kitt-status-text">IN ATTESA</span>
+    <div class="kitt-hud-actions">
+      <label class="kitt-model-wrap">
+        <span class="kitt-model-label">MOTORE</span>
+        <select id="kitt-model">
+          <option value="nano" disabled>Gemini Nano</option>
+          <option value="gemma">Gemma 4 E2B</option>
+          <option value="qwen" selected>Qwen3 0.6B</option>
+        </select>
+      </label>
+      <button type="button" id="kitt-engage">ENGAGE</button>
+    </div>
+  </div>
+</header>
+
+<div class="reveal">
+  <div class="slides">
+
+    <section class="title-slide" data-background-image="/brand/wave.png" data-background-size="cover">
+      <p class="muted">Lazio AI · L'innovazione che fa crescere i territori</p>
+      <h1>LLM locale nel browser:<br/>limiti e applicazioni</h1>
+      <p class="subtitle">un modello piccolo direttamente nella tab</p>
+      <p class="author">Marco Liberati · <code>@dej611</code></p>
+      <aside class="notes">Non nominare KITT. ENGAGE è la slide prima delle demo: parte lo scanner. Poi MOTORE nella barra e di nuovo ENGAGE per il modello. Motori: Qwen3 0.6B e Gemma 4 E2B. Nano solo Chrome.</aside>
+    </section>
+
+    <section>
+      <h3>Programma · 35 minuti</h3>
+      <ol class="kitt-list">
+        <li>LLM e SLM</li>
+        <li>Modelli di decisione</li>
+        <li>Dove va l'energia</li>
+        <li>Demo</li>
+        <li>Limiti di un SLM</li>
+        <li>SLM in un'app realistica</li>
+      </ol>
+      <aside class="notes">Non leggere la lista. Se lo slot è 25 minuti: tieni chat e traduzione, salta Digesto e le altre due demo. Non accorciare energia e decisioni.</aside>
+    </section>
+
+    <section>
+      <h3>Parametri · 2018–2026</h3>
+      <p>GPT-1 è 0,12B. PaLM 540B nel 2022. La curva gialla è MoE: Kimi e Qwen oltre i 2T.</p>
+      <svg class="param-chart" viewBox="0 0 1040 360" role="img" aria-label="Grafico logaritmico: densi in rosso fino a PaLM e Llama 3.1, MoE in giallo oltre 1T, piccoli in verde sotto i 4B, Gemini Nano come intervallo 2–4B.">
+        <title>Parametri dichiarati, scala logaritmica. Rosso: densi. Giallo: MoE totali. Verde: fascia piccola. Nano: 2–4B a seconda del device (Chrome on-device internals). Altri: Wikipedia.</title>
+        <line x1="90" y1="48" x2="90" y2="300" stroke="#333" stroke-width="1"/>
+        <line x1="90" y1="300" x2="1000" y2="300" stroke="#333" stroke-width="1"/>
+        <g stroke="#222" stroke-width="1" stroke-dasharray="3 4">
+          <line x1="90" y1="48" x2="1000" y2="48"/>
+          <line x1="90" y1="75" x2="1000" y2="75"/>
+          <line x1="90" y1="131" x2="1000" y2="131"/>
+          <line x1="90" y1="187" x2="1000" y2="187"/>
+          <line x1="90" y1="244" x2="1000" y2="244"/>
+        </g>
+        <text x="82" y="52" text-anchor="end" class="axis">3T</text>
+        <text x="82" y="79" text-anchor="end" class="axis">1T</text>
+        <text x="82" y="135" text-anchor="end" class="axis">100B</text>
+        <text x="82" y="191" text-anchor="end" class="axis">10B</text>
+        <text x="82" y="248" text-anchor="end" class="axis">1B</text>
+        <text x="82" y="304" text-anchor="end" class="axis">0,1B</text>
+        <text x="90" y="322" text-anchor="middle" class="axis">2018</text>
+        <text x="295" y="322" text-anchor="middle" class="axis">2020</text>
+        <text x="499" y="322" text-anchor="middle" class="axis">2022</text>
+        <text x="704" y="322" text-anchor="middle" class="axis">2024</text>
+        <text x="909" y="322" text-anchor="middle" class="axis">2026</text>
+        <line x1="592" y1="48" x2="592" y2="300" stroke="#8a8a7a" stroke-width="1" stroke-dasharray="4 5"/>
+        <text x="500" y="42" class="axis">ChatGPT</text>
+        <polyline fill="none" stroke="#ff1a1a" stroke-width="2.5" points="135,296 204,234 333,118 529,90 761,97"/>
+        <polyline fill="none" stroke="#ffb000" stroke-width="2.5" points="861,75 963,50 990,54"/>
+        <g fill="#ff1a1a">
+          <circle cx="135" cy="296" r="5"/>
+          <circle cx="204" cy="234" r="5"/>
+          <circle cx="333" cy="118" r="5"/>
+          <circle cx="529" cy="90" r="5"/>
+          <circle cx="761" cy="97" r="5"/>
+        </g>
+        <g fill="#ffb000">
+          <circle cx="861" cy="75" r="5"/>
+          <circle cx="963" cy="50" r="5"/>
+          <circle cx="990" cy="54" r="5"/>
+        </g>
+        <g fill="#ff1a1a" font-size="13">
+          <text x="146" y="292">GPT-1 0,12B</text>
+          <text x="214" y="224">GPT-2 1,5B</text>
+          <text x="342" y="112">GPT-3 175B</text>
+          <text x="400" y="82">PaLM 540B</text>
+          <text x="772" y="116">Llama 3.1 405B</text>
+        </g>
+        <g fill="#ffb000" font-size="13">
+          <text x="720" y="68">Kimi K2 1T</text>
+          <text x="830" y="42">Kimi K3 2,8T</text>
+          <text x="900" y="70">Qwen3.8 2,4T</text>
+        </g>
+        <rect x="592" y="210" width="408" height="90" fill="#33ff66" fill-opacity="0.07"/>
+        <text x="602" y="205" fill="#33ff66" font-size="12">≤4B</text>
+        <g fill="#33ff66">
+          <circle cx="650" cy="237" r="5"/>
+          <circle cx="700" cy="219" r="5"/>
+          <circle cx="838" cy="256" r="5"/>
+          <circle cx="888" cy="219" r="5"/>
+          <circle cx="908" cy="266" r="5"/>
+        </g>
+        <line x1="888" y1="210" x2="888" y2="227" stroke="#33ff66" stroke-width="2"/>
+        <g fill="#33ff66" font-size="13">
+          <text x="660" y="252">Phi-1 1,3B</text>
+          <text x="632" y="210">Phi-2 2,7B</text>
+          <text x="748" y="272">Qwen3 0,6B</text>
+          <text x="798" y="202">Nano 2–4B</text>
+          <text x="860" y="286">Nesso 0,4B</text>
+        </g>
+      </svg>
+      <p class="chart-legend"><span class="leg-llm">LLM densi</span> <span class="leg-moe">MoE (totali)</span> <span class="leg-slm">fascia piccola</span></p>
+      <p class="muted">Scala log. MoE: parametri totali, non attivi (Kimi ~32–104B, Qwen3.8 ~95B). GPT-4, Claude, Gemini API: n.d. Nano: 2–4B a seconda del device (<code>chrome://on-device-internals/</code>).</p>
+      <p class="muted">Fascia browser: fino a circa 4B. In questa pagina: Qwen3 0.6B e Gemma 4 E2B. Fascia server: circa 20–32B.</p>
+      <aside class="notes">Rosso = densi, si ferma a Llama 3.1. Giallo = MoE totali. Verde: Phi, Qwen3, Nesso, e Nano come intervallo 2–4B. Dopo le tre serie: l'asse è il numero di parametri dichiarati. I conteggi non pubblicati restano fuori. L'energia è la slide dopo il «cos'è uno SLM» e i due lavori. GPT-4 resta fuori.</aside>
+    </section>
+
+    <section>
+      <h3>Cos'è uno SLM</h3>
+      <p>Uno Small Language Model è un modello linguistico con pochi parametri, abbastanza piccolo da girare in locale: nel browser o su una GPU.</p>
+      <ul class="kitt-list">
+        <li>Taglia tipica: da circa 0,1B a circa 30B.</li>
+        <li>Sotto i 4B è l'obiettivo di questo talk (l'area verde nel grafico).</li>
+        <li>La quantizzazione registra i pesi con meno bit, per esempio 4 invece di 16: il file diventa più piccolo e lo SLM entra nella memoria del browser.</li>
+      </ul>
+      <aside class="notes">Solo la definizione. Calvin è la slide dopo.</aside>
+    </section>
+
+    <section>
+      <h3>Due tipi di lavoro</h3>
+      <p>Nel saggio <em>Small Models Have Arrived</em> (agosto 2026) Calvin French-Owen riprende una distinzione di Peter Reinhardt, ex socio a Segment:</p>
+      <div class="grid-2">
+        <div class="dash-card">
+          <div class="tier-label">Lavoro aperto</div>
+          <p>Una soluzione che non avevi immaginato. Raro. Resta su un modello frontier.</p>
+        </div>
+        <div class="dash-card">
+          <div class="tier-label">Lavoro operativo</div>
+          <p>Rispondere, sbloccare, fare bozze, instradare. Reinhardt: circa il 95% del suo lavoro operativo.</p>
+        </div>
+      </div>
+      <p class="muted">Gli SLM si usano per il secondo tipo. Prezzo, non joule: circa 1$ su un modello tipo Sonnet, 0,10$ su GPT-5.6 Luna, 0$ nel tab dopo il download.</p>
+      <aside class="notes">calv.info/small-models-have-arrived. La riga dei prezzi è un conto in denaro. Dopo: i modelli di decisione, poi l'energia.</aside>
+    </section>
+
+    <section>
+      <h3>Modelli di decisione</h3>
+      <table class="compare compare--tight">
+        <thead>
+          <tr><th></th><th>Jev 1.14</th><th>GPT-6 Luna</th><th>Gemini Decision 1</th></tr>
+        </thead>
+        <tbody>
+          <tr><th>Ingresso</th><td>testo, immagini</td><td>testo, immagini</td><td>testo, immagini, audio, video, PDF</td></tr>
+          <tr><th>Domande</th><td>limite di contesto</td><td>fino a 400</td><td>fino a 1.000</td></tr>
+          <tr><th>Input</th><td>0,042 $ / 1M</td><td>0,10 $ / 1M</td><td>0,10 $ / 1M</td></tr>
+          <tr><th>Output</th><td>0 $</td><td>0 $</td><td>0 $</td></tr>
+          <tr><th>Parametri</th><td>non pubblicati</td><td>non pubblicati</td><td>non pubblicati</td></tr>
+        </tbody>
+      </table>
+      <ul class="kitt-list">
+        <li>Open-Jev-2B (LoRA e una specializzazione costruita su Qwen3.5-2B) e Qev (circa 0,8B–9B) restituiscono probabilità in un passaggio.</li>
+        <li>Su un test a risposte chiuse, un Qwen da 0,5B arriva al 44%. Rispondere sempre «no» arriva all'84%, perché nel test i no sono la maggioranza. L'autore dice di non usarlo per approvare o bloccare.</li>
+      </ul>
+      <p class="muted">Una richiesta di decisione non genera token di risposta.</p>
+      <aside class="notes">Jev: TypeSafe, 11 novembre 2026 via Willison, 0,042 $ per milione di token in ingresso. Luna e Gemini Decision 1: 0,10 $. Latenza 150–250 ms di Gemini: è la cifra di Google, non una misura nostra. Nessuna demo di una testa di decisione su Qwen. I tre tipi di domanda, se chiedono: noul, choice, score. Jev 1.14 aggiunge box.</aside>
+    </section>
+
+    <section>
+      <h3>Energia di inferenza</h3>
+      <p>Per token, un A100 che raggruppa le richieste sta sotto il telefono. Lo stesso server, una richiesta alla volta, sta sopra.</p>
+      <svg class="param-chart" viewBox="0 0 960 300" role="img" aria-label="Energia per token relativa: A100 con batch 100 uguale a 1, telefoni circa 3, A100 una richiesta circa 5,4. Media su Gemma 3, Llama 3.2 e Qwen 3.">
+        <line x1="80" y1="230" x2="900" y2="230" stroke="#333" stroke-width="1"/>
+        <g>
+          <rect x="125" y="194" width="150" height="36" fill="#33ff66"/>
+          <text x="200" y="180" text-anchor="middle" fill="#33ff66" font-size="22">1×</text>
+          <text x="200" y="258" text-anchor="middle" fill="#8a8a7a" font-size="16">A100 · batch 100</text>
+        </g>
+        <g>
+          <rect x="405" y="122" width="150" height="108" fill="#33ff66"/>
+          <text x="480" y="108" text-anchor="middle" fill="#33ff66" font-size="22">3×</text>
+          <text x="480" y="258" text-anchor="middle" fill="#8a8a7a" font-size="16">Telefono</text>
+          <text x="480" y="278" text-anchor="middle" fill="#8a8a7a" font-size="14">Pixel 8 · iPhone 14</text>
+        </g>
+        <g>
+          <rect x="685" y="36" width="150" height="194" fill="#ffb000"/>
+          <text x="760" y="26" text-anchor="middle" fill="#ffb000" font-size="22">5,4×</text>
+          <text x="760" y="258" text-anchor="middle" fill="#8a8a7a" font-size="16">A100 · una richiesta</text>
+        </g>
+      </svg>
+      <p class="muted">Energia per token, in media, su Gemma 3, Llama 3.2 e Qwen 3. arXiv:2609.11940. Non è una misura dei file di questa scheda.</p>
+      <aside class="notes">Il grafico è l'unica cosa in slide. Base: A100 con batch da 100. I telefoni, in media, circa 3 volte. Lo stesso A100, una richiesta alla volta, circa 5,4 volte. Pixel 8 e iPhone 14. Famiglie: Gemma 3, Llama 3.2, Qwen 3. Non è questa scheda, e per i due file in barra non ci sono joule. Se chiedono lunghezza, numero di parametri o ragionamento: MELODI, IJCAI 2026 e la 4060 Ti sono sotto, non in slide. Non presentare la scheda come più verde di una API. A voce: una chiamata più economica può far aumentare il numero di chiamate. wllama: una frase, se chiedono come gira.</aside>
+    </section>
+
+    <section class="engage-slide" data-engage>
+      <div class="engage-stage">
+        <div class="kitt-scanner engage-scanner" id="engage-scanner" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <button type="button" class="kitt-rocker kitt-rocker--engage" id="slide-engage">ENGAGE</button>
+      </div>
+      <aside class="notes">Un click: parte lo scanner. Poi avanza. Il modello lo carichi dalla barra (MOTORE + ENGAGE).</aside>
+    </section>
+
+    <section>
+      <h3>KITT · testo → testo</h3>
+      <div data-demo="chat"></div>
+      <aside class="notes">Leggere i token al secondo. Stesso prompt su Qwen3 0.6B e su Gemma 4 E2B. Non convertirli in joule. Il chip «Livello minaccia» chiede un JSON. Se il modello non è pronto, battute in scatola.</aside>
+    </section>
+
+    <section>
+      <h3>KITT · immagine → testo</h3>
+      <div data-demo="vision"></div>
+      <aside class="notes">GUARDA. Se l'engine è Gemini Nano, stessa sessione della chat (Prompt API con immagini). Altrimenti SmolVLM. Il chip Lazio Innova sostituisce Roma JS. Se la didascalia è corta o numerica, esce la frase in scatola.</aside>
+    </section>
+
+    <section>
+      <h3>KITT · voce in / testo out</h3>
+      <div data-demo="voice"></div>
+      <aside class="notes">Se l'engine non è Gemini Nano, dire che il riconoscimento vocale di Chrome spesso manda l'audio a Google. Con Gemini Nano lo STT è la Prompt API, audio in locale.</aside>
+    </section>
+
+    <section>
+      <h3>KITT · traduzione</h3>
+      <div data-demo="translate"></div>
+      <aside class="notes">Stesso ENGINE indicato sopra, non la Translator API. Cambiare motore e ritradurre la stessa frase. Un'uscita lunga e sbagliata ha comunque impiegato il tempo di generazione.</aside>
+    </section>
+
+    <section>
+      <h3>Limiti · cosa non sta in un tab</h3>
+      <ul class="kitt-list">
+        <li>Il file Qwen da circa 500 MB diventa circa 1–1,5 GB in RAM.</li>
+        <li>Gemma 4 E2B, in questi esempi, è un file da circa 2,3 GB. Ne esiste una versione ottimizzata per il mobile da circa 0,84 GB: qui non è usato.</li>
+        <li>Alla prima apertura il browser scarica il modello e lo tiene in cache.</li>
+        <li>Su compiti aperti non stanno al passo di Claude.</li>
+        <li>Una context window lunga occupa comunque RAM.</li>
+        <li>Senza un formato di uscita obbligatorio, il modello inventa.</li>
+      </ul>
+      <aside class="notes">Un fatto per riga. Il file Gemma è unsloth UD-IQ2_M, il GGUF più piccolo del repo: i Q4 stanno intorno ai 3,1 GB. n_ctx è 2048 per limitare la cache. Se non carica, le demo usano le battute in scatola.</aside>
+    </section>
+
+    <section>
+      <h3>Digesto</h3>
+      <p>Un modello da 0,6B nella pagina. Conteggio e ricerca li fa il codice. Il modello viene chiamato solo quando il codice non ha già la risposta.</p>
+      <ul class="kitt-list">
+        <li>I conteggi li scrive DuckDB-WASM. La ricerca in pagina è un indice TF-IDF: una fetta, non l'archivio.</li>
+        <li>Se il regex non basta, il modello riempie un JSON e poi dice una o due frasi.</li>
+        <li>Considerare limiti stringenti per evitare che le allucinazioni generino false o peggio dannose risposte</li>
+      </ul>
+      <p class="muted">Resta generazione di testo, non una API di decisione.</p>
+      <aside class="notes">Il punto è il codice che chiama gli strumenti, non il modello. Se lo slot è 25 minuti, questa slide e la successiva si saltano. In questa pagina i motori sono Qwen3 0.6B e Gemma 4 E2B.</aside>
+    </section>
+
+    <section>
+      <h3>OpenNorme · come un'app vera</h3>
+      <p>Lo SLM resta piccolo. Per rispondere su tanti atti, gli si dà una ricerca che gli porta solo i passaggi vicini al tema.</p>
+      <ul class="kitt-list">
+        <li>Un embedding è una lista di numeri: due testi di significato simile finiscono vicini. La ricerca vettoriale confronta la domanda con quelle liste e restituisce gli atti più vicini, non l'archivio.</li>
+        <li>L'indice è Elasticsearch Serverless. L'embedding della domanda lo calcola il progetto, non il browser.</li>
+        <li>Il codice elenca i cinque atti in cima. Il modello, se parte, commenta un solo estratto, in poche decine di token. Se l'estratto è corto, non commenta.</li>
+        <li>Quei token hanno un tetto. La ricerca, embedding compreso, consuma a parte, e in questa pagina non la misuriamo.</li>
+      </ul>
+      <aside class="notes">Prima dei riferimenti. Lo SLM non diventa più capace: la ricerca vettoriale gli porta i passaggi. Elasticsearch Serverless, embedding sul progetto, non nel browser. Cinque nomi scritti dal codice, glossa al massimo 80 token su un estratto di al massimo 500 caratteri. I token del modello hanno un tetto; la ricerca non è in quel tetto. Esci dal deck e mostra explore se la rete c'è. Non leggere explore/.env. Non dire quanti atti sono stati ingeriti. Se il proxy è giù, resta su questa slide.</aside>
+    </section>
+
+    <section>
+      <h3>Riferimenti</h3>
+      <ul class="kitt-list">
+        <li>Calvin French-Owen, <em>Small Models Have Arrived</em>, agosto 2026<br/><a href="https://calv.info/small-models-have-arrived">calv.info/small-models-have-arrived</a></li>
+        <li>Wikipedia, <em>List of large language models</em> — date e parametri del grafico<br/><a href="https://en.wikipedia.org/wiki/List_of_large_language_models">en.wikipedia.org/wiki/List_of_large_language_models</a></li>
+        <li>Chrome, <em>On-device internals</em> — Gemini Nano (2–4B a seconda del device)<br/><a href="chrome://on-device-internals/">chrome://on-device-internals/</a></li>
+        <li>MELODI, arXiv:2407.16893. IJCAI 2026, <em>Mapping the Efficiency Landscape of Small Language Models</em>. arXiv:2608.00008, RTX 4060 Ti.</li>
+        <li>White paper Tsinghua / AITRA sull'energia di inferenza, ottobre 2026. <em>Energies</em> 19(20):4893. arXiv:2609.11940. Case study cloud/edge, ACM SIGMETRICS.</li>
+        <li>Google, <em>Gemini Decisions API</em>, 11 novembre 2026. Simon Willison, stesso giorno.</li>
+      </ul>
+      <aside class="notes">Il chrome:// non si apre da questa pagina: copialo nella barra.</aside>
+    </section>
+
+    <section class="title-slide" data-background-image="/brand/wave.png" data-background-size="cover">
+      <h1>Grazie</h1>
+      <p class="subtitle">OpenNorme · Digesto · wllama</p>
+      <p class="author"><code>@dej611</code></p>
+      <aside class="notes">Tempo per domande. Gemma 4 E2B: GGUF circa 2,3 GB, contesto 2048. Un 30B nel browser non parte: il tetto di ArrayBuffer di questa build sta intorno ai 2–4 GB a seconda del browser.</aside>
+    </section>
+
+  </div>
+</div>
+<footer class="brand-bar"><img src="/brand/loghi.png" alt="Coesione Italia, Unione europea, Repubblica Italiana, Regione Lazio, Lazio Innova. PR FESR Lazio 2021-2027. Soggetto attuatore."/></footer>
+<p class="foot">K.I.T.T.</p>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
