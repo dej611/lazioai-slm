@@ -34,4 +34,4 @@ Se il modello non carica, chat, visione e voce usano battute in scatola; la trad
 
 ## Note relatore
 
-[`SPEAKER-NOTES.md`](SPEAKER-NOTES.md) — anche in `S` (Reveal notes).
+Premendo `S` appare la finestra delle note speaker.
